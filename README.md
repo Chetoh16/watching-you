@@ -1,9 +1,9 @@
 # WatchingYou
 A React + Vite application for browsing, searching, and saving movies. The project integrates with the TMDB API and uses the Context API for global state management.
 
-![Home-Screen](/WatchingYou/ReactWatchlist/frontend/src/assets/home-screen.png)
+![Home-Screen](./ReactWatchlist/frontend/src/assets/home-screen.png)
 
-![Favourites-Screen](/WatchingYou/ReactWatchlist/frontend/src/assets/favoruites-screen.png)
+![Favourites-Screen](./ReactWatchlist/frontend/src/assets/favoruites-screen.png)
 
 ## How It's Made:
 Tech used: `HTML, CSS, React, Vite, JavaScript, TMDB API`
