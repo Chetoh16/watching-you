@@ -59,7 +59,7 @@ public class Watchlist {
 		}
 	}
 
-	
+	// Potentially unnecessary
 	public void sortByID(){
 		
 	}

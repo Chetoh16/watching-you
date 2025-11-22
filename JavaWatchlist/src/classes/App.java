@@ -64,7 +64,7 @@ public class App {
 	        		wlist.removeMedia(index);	        		
 	        		break;
 	        	case "W":
-	        		System.out.println("Enter the index of the media you want to mark as watched\n");
+	        		System.out.println("Enter the index of the media you want to mark as watched.\n");
 	        		input = myObj.nextLine().trim();
 	        		int index2 = Integer.parseInt(input);
 	        		if(index2 > wlist.getSize() - 1 || index2 < 0) {
