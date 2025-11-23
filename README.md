@@ -6,7 +6,7 @@ A React + Vite application for browsing, searching, and saving movies. The proje
 ![Favourites-Screen](./ReactWatchlist/frontend/src/assets/favoruites-screen.png)
 
 ## How It's Made:
-Tech used: `HTML, CSS, React, Vite, JavaScript, TMDB API`
+- Technologies Used: `HTML, CSS, React, Vite, JavaScript, TMDB API`
 
 The application retrieves movie data from the TMDB API and displays popular movies on the Home page. React state is used to manage dynamic data such as the movie list, search results, and loading status. 
 
@@ -24,3 +24,7 @@ Favourited movies persist across page navigation by storing them in localStorage
 - Save favourites so they persist after closing browser
 - Ability to create watchlists
 - Ability to add personal notes for each movie
+
+
+## Credits
+- [React Watchlist Tutorial](https://youtu.be/G6D9cBaLViA?si=AOCcsIOhTEqY8yOX)
