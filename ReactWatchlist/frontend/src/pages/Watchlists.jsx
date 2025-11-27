@@ -1,10 +1,12 @@
 import Watchlist from "../components/Watchlist"
 import "../css/Watchlist.css"
 
+import { useParams } from "react-router-dom";
 
 function Watchlists(){
     
-
+    const { watchlistId } = useParams();
+    
     function createWatchlist(){
         return alert('hi');
 

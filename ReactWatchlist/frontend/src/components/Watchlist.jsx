@@ -1,7 +1,10 @@
+import { Link } from "react-router-dom"
 
-function Watchlist(props){
+
+function Watchlist(watchlist){
+    
     return <div className="watchlist-folder">
-        <h1>Watchlist {props.index}</h1>
+        <Link to={`/watchlist/${watchlist.id}`}>{props.name}</Link>
     </div>
 
 }

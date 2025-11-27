@@ -18,6 +18,8 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/favourites" element={<Favourites/>}/>
           <Route path="/watchlists" element={<Watchlists/>}/>
+          <Route path="/watchlists/:watchlistId" element={<Watchlists/>}/>
+          
         </Routes> 
       </main>
     </MovieProvider>
