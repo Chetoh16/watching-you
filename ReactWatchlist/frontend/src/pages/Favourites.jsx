@@ -17,7 +17,7 @@ function Favourites(){
                 ))}
             </div>
         </div>
-        );
+        ); 
     }
     
 

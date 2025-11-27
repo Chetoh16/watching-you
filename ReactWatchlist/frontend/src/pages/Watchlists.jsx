@@ -2,9 +2,16 @@ import Watchlist from "../components/Watchlist"
 import "../css/Watchlist.css"
 
 
-function Watchlists(i){
+function Watchlists(){
     
-    //function CreateWatchlist
+    const {watchlists} = useMovieContext();
+
+    function createWatchlist(){
+        return alert('hi');
+
+
+    }
+    
     
     return <>
         <div className="favourites-empty">
@@ -12,7 +19,7 @@ function Watchlists(i){
             <p> Start adding watchlists.</p>
         </div>
         <div className="create-watchlist">
-            <button type="submit" className="search-btn" onclick="CreateWatchlist();" >Create Watchlist </button>
+            <button type="submit" className="search-btn" onClick={createWatchlist}> Create Watchlist </button>          
         </div>
     </>
 
