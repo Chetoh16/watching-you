@@ -4,7 +4,6 @@ import "../css/Watchlist.css"
 
 function Watchlists(){
     
-    const {watchlists} = useMovieContext();
 
     function createWatchlist(){
         return alert('hi');
