@@ -2,19 +2,12 @@ import Watchlist from "../components/Watchlist"
 import "../css/Watchlist.css"
 import CreateCard from "../components/CreateCard"
 import WatchlistCard from "../components/WatchlistCard"
+import { useMovieContext } from "../contexts/MovieContext"
 
-import { useParams } from "react-router-dom";
 
 function Watchlists(){
-    
-    const { watchlistId } = useParams();
-    
-    function createWatchlist(){
-        return alert('hi');
 
-
-    }
-    
+    const { watchlists, createWatchlist } = useMovieContext()
     
     return <>
         <div className="favourites-empty">
