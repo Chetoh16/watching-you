@@ -6,3 +6,5 @@ function WatchlistCard({ watchlist}) {
         <p>{watchlist.description}</p>
     </div>
 }
+
+export default WatchlistCard

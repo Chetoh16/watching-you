@@ -5,3 +5,5 @@ function CreateCard({ onClick }) {
         <p>New Watchlist</p>
     </div>
 }
+
+export default CreateCard

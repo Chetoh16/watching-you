@@ -5,6 +5,7 @@ import {Routes, Route} from "react-router-dom"
 import NavBar from './components/NavBar'
 import { MovieProvider } from './contexts/MovieContext'
 import Watchlists from './pages/Watchlists'
+import WatchlistDetail from './pages/WatchlistDetail'  
 // import Watchlists from './pages/Watchlists'
 
 function App() {
