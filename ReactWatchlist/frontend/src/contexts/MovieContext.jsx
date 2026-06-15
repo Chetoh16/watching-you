@@ -9,20 +9,69 @@ export const useMovieContext = () => useContext(MovieContext)
 
 // Provide state to any of the components that are wrapped around it
 export const MovieProvider = ({children}) => {
-    const [favourites, setFavourites] = useState([])
 
-    useEffect(() => {
+    const [favourites, setFavourites] = useState(() => {
         const storedFavs = localStorage.getItem("favourites")
+        return storedFavs ? JSON.parse(storedFavs) : []
+    })
 
-        // store favs in array. store it as json as local storage can only store array
-        // when reading in, convert json to real object 
-        if (storedFavs) setFavourites(JSON.parse(storedFavs))
-    }, [])
+    const [watchlists, setWatchlists] = useState(() => {
+        const stored = localStorage.getItem("watchlists")
+        return stored ? JSON.parse(stored) : []
+    })
+
+    const createWatchlist = () => {
+        if (watchlists.length > 10) {
+            console.error("Maximum number of watchlists reached.")
+            return
+        }
+
+        const newWatchlist = {
+            id: crypto.randomUUID(),
+            name: `Watchlist ${watchlists.length + 1}`,
+            description: "A new watchlist",
+            movies: [],
+            tags: []
+        }
+
+        setWatchlists(prev => [...prev, newWatchlist])
+    }
+
+    const updateWatchlist = (watchlistId, updatedData) => {
+        // update one field without overwriting the whole object
+        setWatchlists(prev => prev.map(watchlist =>
+            watchlist.id === watchlistId ? { ...watchlist, ...updatedData } : watchlist
+        ))  
+    }
+
+    const deleteWatchlist = (watchlistId) => {
+        setWatchlists(prev => prev.filter(watchlist => watchlist.id !== watchlistId))
+    }
+
+    const addMovieToWatchlist = (watchlistId, movie) => {
+        setWatchlists(prev => prev.map(watchlist =>
+            watchlist.id === watchlistId ? { ...watchlist, movies: [...watchlist.movies, movie] } : watchlist
+        ))
+    }
+
+    const removeMovieFromWatchlist = (watchlistId, movieId) => {
+        setWatchlists(prev => prev.map(watchlist =>
+            watchlist.id === watchlistId ? { ...watchlist, movies: watchlist.movies.filter(movie => movie.id !== movieId) } : watchlist
+        ))
+    }
+
+
 
     // anytime "favourites" state changes, update local storage
     useEffect(() => {
         localStorage.setItem('favourites', JSON.stringify(favourites))
     },[favourites])
+
+    
+    // anytime "watchlists" state changes, update local storage
+    useEffect(() => {
+        localStorage.setItem('watchlists', JSON.stringify(watchlists))
+    },[watchlists])
 
     // Can't just straight add to array by array.push bcs it wouldn't update the state
     // Take previous value (favourites array), add new movie
@@ -45,7 +94,13 @@ export const MovieProvider = ({children}) => {
         favourites,
         addToFavourites,
         removeFromFavourites,
-        isFavourite
+        isFavourite,
+        watchlists,
+        createWatchlist,
+        updateWatchlist,
+        deleteWatchlist,
+        addMovieToWatchlist,
+        removeMovieFromWatchlist
     }
 
     // value={value} allows the children to access the values

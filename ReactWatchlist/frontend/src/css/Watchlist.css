@@ -6,3 +6,9 @@
   margin: 2rem auto;
   max-width: 600px;
 }
+
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
