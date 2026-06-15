@@ -90,6 +90,24 @@ export const MovieProvider = ({children}) => {
         return favourites.some(movie => movie.id === movieID)
     }
 
+    const addTag = (watchlistId, tag) => {
+        const trimmed = tag.trim()
+        if (!trimmed) return
+        setWatchlists(prev => prev.map(w =>
+            w.id === watchlistId && !w.tags.includes(trimmed)
+                ? { ...w, tags: [...w.tags, trimmed] }
+                : w
+        ))
+    }
+
+    const removeTag = (watchlistId, tag) => {
+        setWatchlists(prev => prev.map(w =>
+            w.id === watchlistId
+                ? { ...w, tags: w.tags.filter(t => t !== tag) }
+                : w
+        ))
+    }
+
     const value = {
         favourites,
         addToFavourites,
@@ -100,7 +118,9 @@ export const MovieProvider = ({children}) => {
         updateWatchlist,
         deleteWatchlist,
         addMovieToWatchlist,
-        removeMovieFromWatchlist
+        removeMovieFromWatchlist,
+        addTag,
+        removeTag
     }
 
     // value={value} allows the children to access the values
