@@ -1,14 +1,121 @@
-.watchlist-folder {
-  text-align: center;
-  padding: 4rem 2rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  margin: 2rem auto;
-  max-width: 600px;
-}
 
 .watchlist-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 1rem;
+  padding: 1rem;
+}
+
+/* Create card */
+.create-card {
+  background-color: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 320px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.2s;
+}
+.create-card:hover {
+  border-color: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.create-card span { font-size: 50px; }
+.create-card p { font-size: 23px; }
+
+/* Watchlist card */
+.watchlist-card {
+  background-color: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.watchlist-card:hover { border-color: rgba(255, 255, 255, 0.2); }
+
+.card-banner {
+  height: 130px;
+  position: relative;
+}
+
+/* Colour picker button */
+.colour-picker-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  border: 5px solid rgb(255, 255, 255);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+}
+.colour-picker-btn input[type="color"] {
+  width: 32px;
+  height: 32px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+
+  /* Move the color input so it doesn't show up */
+  transform: translate(-8px, -8px);
+}
+
+.card-body { padding: 12px; }
+
+/* Editable name */
+.card-name {
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.87);
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid transparent;
+  width: 100%;
+  outline: none;
+  font-family: inherit;
+  padding: 2px 0;
+  transition: border-color 0.2s;
+}
+.card-name:hover { border-bottom-color: rgba(255, 255, 255, 0.15); }
+.card-name:focus { border-bottom-color: rgba(255, 255, 255, 0.3); }
+
+/* Editable description */
+.card-desc {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid transparent;
+  width: 100%;
+  outline: none;
+  font-family: inherit;
+  padding: 2px 0;
+  margin-top: 10px;
+  resize: none;
+  line-height: 1.4;
+  min-height: 70px;
+  transition: border-color 0.2s;
+}
+.card-desc:hover { border-bottom-color: rgba(255, 255, 255, 0.15); }
+.card-desc:focus { border-bottom-color: rgba(255, 255, 255, 0.3); }
+
+/* Tags */
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
