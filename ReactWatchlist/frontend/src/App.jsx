@@ -5,7 +5,8 @@ import {Routes, Route} from "react-router-dom"
 import NavBar from './components/NavBar'
 import { MovieProvider } from './contexts/MovieContext'
 import Watchlists from './pages/Watchlists'
-import WatchlistDetail from './pages/WatchlistDetail'  
+import WatchlistModal from './components/WatchlistModal'  
+
 // import Watchlists from './pages/Watchlists'
 
 function App() {
@@ -19,8 +20,7 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/favourites" element={<Favourites/>}/>
           <Route path="/watchlists" element={<Watchlists/>}/>
-          <Route path="/watchlists/:watchlistId" element={<WatchlistDetail/>}/>
-          
+          <Route path="/watchlists/:watchlistId" element={<WatchlistModal/>}/>
         </Routes> 
       </main>
     </MovieProvider>

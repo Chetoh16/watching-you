@@ -3,7 +3,7 @@ import { useMovieContext } from "../contexts/MovieContext"
 
 function WatchlistCard({ watchlist }) {
     const { updateWatchlist, deleteWatchlist, addTag, removeTag } = useMovieContext()
-    const {modalOpen, setModalOpen} = useState(false)
+    const [modalOpen, setModalOpen] = useState(false)
     const [newTag, setNewTag] = useState("")
 
     const handleColourChange = (e) => {

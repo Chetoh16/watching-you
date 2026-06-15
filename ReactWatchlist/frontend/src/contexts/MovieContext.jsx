@@ -8,7 +8,7 @@ export const useMovieContext = () => useContext(MovieContext)
 
 
 // Provide state to any of the components that are wrapped around it
-export const MovieProvider = ({children}) => {
+export const MovieProvider = ({children}) => {    
 
     const [favourites, setFavourites] = useState(() => {
         const storedFavs = localStorage.getItem("favourites")
