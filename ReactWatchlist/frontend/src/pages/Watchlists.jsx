@@ -16,7 +16,7 @@ function Watchlists(){
         )}
 
         <div className="watchlist-grid">
-            <CreateCard onClick={createWatchlist} />
+            <CreateCard onClick={createWatchlist}/>
             {watchlists.map(w => <WatchlistCard key={w.id} watchlist={w} />)}
         </div>
 

@@ -5,8 +5,8 @@ import { useMovieContext } from "../contexts/MovieContext"
 
 function MovieCard({movie}){
     
-    // Gives access to all these different values
-    const {isFavourite, addToFavourites, removeFromFavourites} = useMovieContext()
+    const { isFavourite, addToFavourites, removeFromFavourites, watchlists, addMovieToWatchlist } = useMovieContext()
+    const [showWatchlistPicker, setShowWatchlistPicker] = useState(false)
 
     const favourite = isFavourite(movie.id)
 

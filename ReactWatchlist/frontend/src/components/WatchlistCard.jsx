@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useMovieContext } from "../contexts/MovieContext"
+import WatchlistModal from "./WatchlistModal"
 
 function WatchlistCard({ watchlist }) {
     const { updateWatchlist, deleteWatchlist, addTag, removeTag } = useMovieContext()
