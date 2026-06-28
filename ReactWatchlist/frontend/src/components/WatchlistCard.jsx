@@ -4,7 +4,6 @@ import WatchlistModal from "./WatchlistModal"
 
 function WatchlistCard({ watchlist }) {
     const { updateWatchlist, deleteWatchlist, addTag, removeTag } = useMovieContext()
-    const [modalOpen, setModalOpen] = useState(false)
     const [newTag, setNewTag] = useState("")
 
     const handleColourChange = (e) => {
@@ -21,7 +20,7 @@ function WatchlistCard({ watchlist }) {
     }
 
     return (
-        <div className="watchlist-card" onClick={() => setModalOpen(true)}>
+        <div className="watchlist-card">
             <div className="card-banner" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
                 <div className="colour-picker-btn" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
                     <input
@@ -67,12 +66,6 @@ function WatchlistCard({ watchlist }) {
                     />
                 </div>
             </div>
-            {modalOpen && (
-                <WatchlistModal
-                    watchlist={watchlist}
-                    onClose={() => setModalOpen(false)}
-                />
-            )}
         </div>
         
     )
