@@ -1,5 +1,6 @@
 
 import "../css/MovieCard.css"
+import { useState } from "react"
 import { useMovieContext } from "../contexts/MovieContext"
 
 
@@ -10,7 +11,7 @@ function MovieCard({movie}){
 
     const favourite = isFavourite(movie.id)
 
-    function onFavouriteClick(e){
+    const onFavouriteClick = (e) => {
         e.preventDefault()
         if (favourite) removeFromFavourites(movie.id)
         else addToFavourites(movie)
@@ -24,6 +25,32 @@ function MovieCard({movie}){
                 <button className="favourite-btn" onClick={onFavouriteClick}>
                     {favourite ? "❤️" : "💔"}
                 </button>
+                <button
+                    className="watchlist-btn"
+                    onClick={e => { e.preventDefault(); setShowWatchlistPicker(p => !p) }}
+                    // p => !p toggles the state of showWatchlistPicker (if true then make false and vice versa)
+                >
+                    +
+                </button>
+                {showWatchlistPicker && (
+                    <div className="watchlist-picker" onClick={e => e.stopPropagation()}>
+                        {watchlists.length === 0
+                            ? <p className="picker-empty">No watchlists yet</p>
+                            : watchlists.map(w => (
+                                <button
+                                    key={w.id}
+                                    className="picker-item"
+                                    onClick={() => {
+                                        addMovieToWatchlist(w.id, movie)
+                                        setShowWatchlistPicker(false)
+                                    }}
+                                >
+                                    {w.name}
+                                </button>
+                            ))
+                        }
+                    </div>
+                )}
             </div>
         </div>
         <div className="movie-info">
