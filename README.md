@@ -24,6 +24,9 @@ Favourited movies persist across page navigation by storing them in localStorage
 - Save favourites so they persist after closing browser
 - Ability to create watchlists
 - Ability to add personal notes for each movie
+- Rate movies
+- Use TypeScript
+- Darkmode and Lightmode
 
 
 ## Credits

@@ -15,8 +15,6 @@
 
 .favourites-empty {
   text-align: center;
-  padding: 4rem 2rem;
-  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   margin: 2rem auto;
   max-width: 600px;
