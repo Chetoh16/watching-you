@@ -1,42 +1,68 @@
 import { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+// useParams reads from the URL (the :watchlistId part)
+
 import { useMovieContext } from "../contexts/MovieContext"
 import { getMovieById, searchMovies } from "../services/api"
 import MovieCard from "../components/MovieCard"
 import "../css/WatchlistDetail.css"
 
 function WatchlistDetail() {
+
+    // watchlistId comes from the URL
+    // now it can be used as a string
     const { watchlistId } = useParams()
+
+    // navigate() allows URL to be changed
+    // navigate("/watchlists") acts like clicking a link to /watchlists.
     const navigate = useNavigate()
+
+    // get everything needed from the global context
     const { watchlists, addMovieToWatchlist, removeMovieFromWatchlist } = useMovieContext()
 
+    // full movie objects fetched from TMDB (NOT stored in context as context only has IDs)
     const [movies, setMovies] = useState([])
+
     const [searchQuery, setSearchQuery] = useState("")
     const [searchResults, setSearchResults] = useState([])
     const [loading, setLoading] = useState(true)
     const [searching, setSearching] = useState(false)
-    const [addedIds, setAddedIds] = useState(new Set())  // tracks recently added for feedback
 
+    // a Set of movie IDs that were recently added
+    // set is used instead of array because Set.has() is O(1) lookup
+    const [addedIds, setAddedIds] = useState(new Set())  
+
+    // useRef creates a reference to a DOM element without causing re-renders
+    // attach this to the search container div to detect clicks outside it
     const searchRef = useRef(null)
 
+    // find the watchlist that matches the ID in the URL
     const watchlist = watchlists.find(w => w.id === watchlistId)
 
+    // if the watchlist is deleted (or the ID is invalid), redirect back
+    // runs whenever watchlist changes
     useEffect(() => {
         if (!watchlist) navigate("/watchlists")
     }, [watchlist])
 
+    // fetch all movies in this watchlist from TMDB
+    // Promise.all fires all API requests simultaneously
     useEffect(() => {
         if (!watchlist || watchlist.movies.length === 0) {
             setLoading(false)
             return
         }
+
+        // watchlist.movies is an array of IDs like [550, 278, 680]
+        // .map(id => getMovieById(id)) turns that into an array of Promises
+        // Promise.all waits for ALL of them to resolve, then gives an array of results
         Promise.all(watchlist.movies.map(id => getMovieById(id)))
             .then(results => {
                 setMovies(results.filter(Boolean))
                 setLoading(false)
             })
             .catch(() => setLoading(false))
-    }, [])
+    }, [watchlist])
 
     // Close search results when clicking outside
     useEffect(() => {
@@ -52,7 +78,13 @@ function WatchlistDetail() {
 
     const handleSearch = async (e) => {
         e.preventDefault()
-        if (!searchQuery.trim()) return
+
+        
+        if (!searchQuery.trim()){
+            return
+        } 
+        // ignore empty searches
+
         setSearching(true)
         try {
             const results = await searchMovies(searchQuery)
@@ -61,24 +93,40 @@ function WatchlistDetail() {
             console.error(err)
         } finally {
             setSearching(false)
+            // finally always runs, even if there was an error
+
         }
     }
 
+    // Clears the search results and input
     const dismissSearch = () => {
         setSearchResults([])
         setSearchQuery("")
     }
 
+    // Checks if a movie ID is already in this watchlist
+    // The ?. optional chaining means "if watchlist is undefined, return undefined instead of throwing an error".
     const isInWatchlist = (movieId) => watchlist?.movies.includes(Number(movieId))
 
+    // Handles both adding and removing a movie, depending on current state.
     const handleToggle = (movie) => {
         if (isInWatchlist(movie.id)) {
+
             removeMovieFromWatchlist(watchlistId, movie.id)
+            // remove from context (updates localStorage)
+
             setMovies(prev => prev.filter(m => m.id !== movie.id))
+            // remove from local movies state (updates what's visible on screen)
+
             setAddedIds(prev => { const n = new Set(prev); n.delete(movie.id); return n })
         } else {
+
             addMovieToWatchlist(watchlistId, movie)
+            // add to context (stores the ID in localStorage)
+
             setMovies(prev => [...prev, movie])
+            // add full movie object to local state (so it shows in the list immediately)
+
             setAddedIds(prev => new Set(prev).add(movie.id))
             // clear the "added" indicator after 2 seconds
             setTimeout(() => {
@@ -87,15 +135,20 @@ function WatchlistDetail() {
         }
     }
 
+    // early return
     if (!watchlist) return null
 
     return (
         <div className="watchlist-detail">
+            
+            {/* Header uses the watchlist's custom colour as background */}
             <div className="detail-header" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
                 <button className="back-btn" onClick={() => navigate("/watchlists")}>← Back</button>
                 <div className="detail-header-text">
                     <h1>{watchlist.name}</h1>
                     <p>{watchlist.description}</p>
+
+                    {/* Only render the tags section if there are tags */}
                     {watchlist.tags.length > 0 && (
                         <div className="tags">
                             {watchlist.tags.map(tag => (
@@ -107,7 +160,8 @@ function WatchlistDetail() {
             </div>
 
             <div className="detail-body">
-                {/* Search */}
+
+                {/* Search section, ref attached so click-outside detection works */}
                 <div ref={searchRef}>
                     <form onSubmit={handleSearch} className="search-form">
                         <input
@@ -122,7 +176,8 @@ function WatchlistDetail() {
                             : <button type="submit" className="search-btn">{searching ? "..." : "Search"}</button>
                         }
                     </form>
-
+                    
+                    {/* Only show results section if there are results */}
                     {searchResults.length > 0 && (
                         <section className="detail-section">
                             <h2>Results</h2>
