@@ -21,7 +21,7 @@ export const MovieProvider = ({children}) => {
     })
 
     const createWatchlist = () => {
-        if (watchlists.length > 10) {
+        if (watchlists.length >= 10) {
             console.error("Maximum number of watchlists reached.")
             return
         }
@@ -49,14 +49,18 @@ export const MovieProvider = ({children}) => {
     }
 
     const addMovieToWatchlist = (watchlistId, movie) => {
-        setWatchlists(prev => prev.map(watchlist =>
-            watchlist.id === watchlistId ? { ...watchlist, movies: [...watchlist.movies, movie] } : watchlist
+        setWatchlists(prev => prev.map(w =>
+            w.id === watchlistId && !w.movies.includes(Number(movie.id))
+                ? { ...w, movies: [...w.movies, Number(movie.id)] }
+                : w
         ))
     }
 
     const removeMovieFromWatchlist = (watchlistId, movieId) => {
-        setWatchlists(prev => prev.map(watchlist =>
-            watchlist.id === watchlistId ? { ...watchlist, movies: watchlist.movies.filter(movie => movie.id !== movieId) } : watchlist
+        setWatchlists(prev => prev.map(w =>
+            w.id === watchlistId
+                ? { ...w, movies: w.movies.filter(id => id !== Number(movieId)) }
+                : w
         ))
     }
 

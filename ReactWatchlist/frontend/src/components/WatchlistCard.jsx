@@ -1,9 +1,13 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useMovieContext } from "../contexts/MovieContext"
 
 function WatchlistCard({ watchlist }) {
     const { updateWatchlist, deleteWatchlist, addTag, removeTag } = useMovieContext()
     const [newTag, setNewTag] = useState("")
+
+    // for navigation to the watchlist detail page when the card is clicked
+    const navigate = useNavigate()
 
     const handleColourChange = (e) => {
         e.stopPropagation()
@@ -19,9 +23,9 @@ function WatchlistCard({ watchlist }) {
     }
 
     return (
-        <div className="watchlist-card">
+        <div className="watchlist-card" onClick={() => navigate(`/watchlists/${watchlist.id}`)}>
             <div className="card-banner" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
-                <div className="colour-picker-btn" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
+                <div className="colour-picker-btn" onClick={e => e.stopPropagation()} style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
                     <input
                         type="color"
                         value={watchlist.colour || "#2a2a2a"}
@@ -34,26 +38,23 @@ function WatchlistCard({ watchlist }) {
                 <span>×</span>
             </div>
 
-            <div className="card-body">
+            <div className="card-body" onClick={e => e.stopPropagation()}>
                 <input
                     className="card-name"
                     value={watchlist.name}
-                    onClick={e => e.stopPropagation()}
                     onChange={e => updateWatchlist(watchlist.id, { name: e.target.value })}
                 />
                 <textarea
                     className="card-desc"
                     rows={2}
                     value={watchlist.description}
-                    onClick={e => e.stopPropagation()}
                     onChange={e => updateWatchlist(watchlist.id, { description: e.target.value })}
                 />
                 <div className="tags">
                     {watchlist.tags.map(tag => (
-                        <span key={tag} className="tag">{tag}
-                            <button className="remove-tag-btn" onClick={e => { e.stopPropagation(); removeTag(watchlist.id, tag) }}>
-                                ×
-                            </button>
+                        <span key={tag} className="tag">
+                            {tag}
+                            <span className="tag-remove" onClick={() => removeTag(watchlist.id, tag)}>×</span>
                         </span>
                     ))}
                     <input 

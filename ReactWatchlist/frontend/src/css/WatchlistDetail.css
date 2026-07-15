@@ -1,0 +1,98 @@
+.watchlist-detail {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.detail-header {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.back-btn {
+    background: rgba(0,0,0,0.3);
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.4em 0.8em;
+    border-radius: 6px;
+    align-self: flex-start;
+    margin-bottom: 0.5rem;
+}
+.back-btn:hover {
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border-color: transparent;
+}
+
+.detail-header-text h1 { font-size: 1.8rem; font-weight: 600; }
+.detail-header-text p {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+
+.detail-body {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.detail-section { margin-top: 1.5rem; }
+.detail-section h2 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+.detail-movie-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-empty {
+    color: rgba(255,255,255,0.3);
+    font-size: 0.9rem;
+}
+
+/* Toggle buttons */
+.watchlist-toggle-btn {
+    width: 100%;
+    padding: 0.4em;
+    font-size: 0.8rem;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.watchlist-toggle-btn.in-list {
+    background: rgba(180,40,40,0.2);
+    color: rgba(255,120,120,0.9);
+    border-color: rgba(180,40,40,0.3);
+}
+.watchlist-toggle-btn.just-added {
+    background: rgba(40,160,80,0.25);
+    color: rgba(100,220,130,0.95);
+    border-color: rgba(40,160,80,0.4);
+}
+.watchlist-toggle-btn:hover { opacity: 0.8; border-color: transparent; }
+
+/* Dismiss search button */
+.dismiss-btn {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+}
+.dismiss-btn:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: transparent;
+}

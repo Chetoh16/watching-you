@@ -120,3 +120,48 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.tag-remove {
+    cursor: pointer;
+    opacity: 0.5;
+    font-size: 14px;
+    line-height: 1;
+    margin-left: 2px;
+}
+.tag-remove:hover { opacity: 1; }
+
+.tag-input {
+    font-size: 11px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+    outline: none;
+    width: 50px;
+    padding: 2px 4px;
+    font-family: inherit;
+}
+.tag-input::placeholder { color: rgba(255,255,255,0.25); }
+
+/* Delete button — positioned outside the banner now */
+.delete-btn {
+    display: flex;
+    justify-content: flex-end;
+    padding: 6px 8px 0;
+    cursor: pointer;
+    color: rgba(255,255,255,0.3);
+    font-size: 18px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.delete-btn:hover { color: rgba(220,80,80,0.9); }
