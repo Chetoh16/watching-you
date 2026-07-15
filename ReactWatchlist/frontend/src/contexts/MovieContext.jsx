@@ -2,19 +2,29 @@
 
 import { createContext, useState, useContext,useEffect } from "react";
 
+// context object used to hold all shared state
+// wrap the context.Provider around any component that will want to consume its values
+// components don't use this but instead use the useMovieContext
 const MovieContext = createContext()
 
+// what components call to access the context
+// rather than having to do extra steps to access it
 export const useMovieContext = () => useContext(MovieContext)
 
-
-// Provide state to any of the components that are wrapped around it
+// Provides state to any of the components that are wrapped around it
+// any component inside that wrapper can call useMovieContext() to access the state and functions defined here
 export const MovieProvider = ({children}) => {    
 
+    // lazy initialisation
+    // instead of useState([]), pass a function so React calls it once on first render to get initial value
+    // reads from localStorage before first render, if nothing is stored there it defaults to an empty array
     const [favourites, setFavourites] = useState(() => {
         const storedFavs = localStorage.getItem("favourites")
         return storedFavs ? JSON.parse(storedFavs) : []
+        // JSON.parse: localStorage only stores strings, so need to convert back to array
     })
 
+    // same lazy initialisation
     const [watchlists, setWatchlists] = useState(() => {
         const stored = localStorage.getItem("watchlists")
         return stored ? JSON.parse(stored) : []
@@ -28,6 +38,7 @@ export const MovieProvider = ({children}) => {
 
         const newWatchlist = {
             id: crypto.randomUUID(),
+            // crypto.randomUUID() is built into browsers (no library needed) and generates a unique ID
             name: `Watchlist ${watchlists.length + 1}`,
             description: "A new watchlist",
             movies: [],
@@ -38,16 +49,26 @@ export const MovieProvider = ({children}) => {
     }
 
     const updateWatchlist = (watchlistId, updatedData) => {
-        // Update one field without overwriting the whole object
+        // update one field without overwriting the whole object
+
+        // map() creates a new array. For each watchlist:
+        //   - if it matches the ID: merge existing fields with new changes
+        //   - { ...watchlist, ...changes } copies all existing fields, then overwrites
+        //     only the ones present in `changes`
+        //   - if it doesn't match: return it unchanged
         setWatchlists(prev => prev.map(watchlist =>
             watchlist.id === watchlistId ? { ...watchlist, ...updatedData } : watchlist
         ))  
     }
 
+    // Removes the watchlist entirely by filtering it out by ID
     const deleteWatchlist = (watchlistId) => {
         setWatchlists(prev => prev.filter(watchlist => watchlist.id !== watchlistId))
     }
 
+    // Adds a movie ID to a watchlist's movies array
+    // Number(movie.id) ensures it's stored as a number, not a string
+    // the !w.movies.includes() prevents duplicates
     const addMovieToWatchlist = (watchlistId, movie) => {
         setWatchlists(prev => prev.map(w =>
             w.id === watchlistId && !w.movies.includes(Number(movie.id))
@@ -56,6 +77,7 @@ export const MovieProvider = ({children}) => {
         ))
     }
 
+    // Removes a movie ID from the watchlist's movies array.
     const removeMovieFromWatchlist = (watchlistId, movieId) => {
         setWatchlists(prev => prev.map(w =>
             w.id === watchlistId
@@ -95,12 +117,9 @@ export const MovieProvider = ({children}) => {
     }
 
     const addTag = (watchlistId, tag) => {
-        // Trim whitespace and check if the tag is not empty
         const trimmed = tag.trim()
         if (!trimmed) return
 
-        // Check if the tag already exists in the watchlist, if it does, don't add it again
-        // If it doesn't exist, add it to the watchlist's tags array
         setWatchlists(prev => prev.map(w =>
             w.id === watchlistId && !w.tags.includes(trimmed)
                 ? { ...w, tags: [...w.tags, trimmed] }
@@ -116,6 +135,7 @@ export const MovieProvider = ({children}) => {
         ))
     }
 
+    // everything in this object is accessible to any component that calls useMovieContext()
     const value = {
         favourites,
         addToFavourites,
@@ -131,6 +151,8 @@ export const MovieProvider = ({children}) => {
         removeTag
     }
 
+    // MovieContext.Provider is what makes the value available to all descendant components. 
+    // {children} renders whatever is wrapped inside <MovieProvider>...</MovieProvider> in App.jsx.
     // value={value} allows the children to access the values
     return <MovieContext.Provider value={value}>
         {children}
