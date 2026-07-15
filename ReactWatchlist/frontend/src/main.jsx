@@ -9,7 +9,7 @@ import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* Allows us to change components to render on screen based on the / root we will go to */}
+    {/* Allows to change components to render on screen based on the / root we will go to */}
     <BrowserRouter>
       <App />
     </BrowserRouter>
