@@ -36,6 +36,9 @@ function WatchlistDetail() {
     // attach this to the search container div to detect clicks outside it
     const searchRef = useRef(null)
 
+    // SCREENSHOT TAKING
+
+
     // find the watchlist that matches the ID in the URL
     const watchlist = watchlists.find(w => w.id === watchlistId)
 
