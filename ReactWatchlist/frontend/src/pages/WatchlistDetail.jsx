@@ -40,16 +40,17 @@ function WatchlistDetail() {
     const searchRef = useRef(null)
 
     // SCREENSHOT TAKING
+    const screenshotRef = useRef(null)
+
     const handleCapture = async () => {
-        const element = document.getElementById('preview');
-        if (element) {
-        const canvas = await html2canvas(element, { allowTaint: true, foreignObjectRendering: true });
+        const canvas = await html2canvas(screenshotRef.current, { allowTaint: true, foreignObjectRendering: true, useCORS: true, });
+
         const link = document.createElement('a');
         link.href = canvas.toDataURL('image/png');
         link.download = 'preview.png';
         link.click();
-        }
-    };
+    }
+    
 
 
 
@@ -157,92 +158,93 @@ function WatchlistDetail() {
 
     return (
         <div className="watchlist-detail">
-            
-            {/* Header uses the watchlist's custom colour as background */}
-            <div className="detail-header" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
-                <button className="back-btn" onClick={() => navigate("/watchlists")}>← Back</button>
-                <div className="detail-header-text">
-                    <h1>{watchlist.name}</h1>
-                    <p>{watchlist.description}</p>
+            <div ref={screenshotRef}>
+                {/* Header uses the watchlist's custom colour as background */}
+                <div className="detail-header" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
+                    <button className="back-btn" onClick={() => navigate("/watchlists")}>← Back</button>
+                    <div className="detail-header-text">
+                        <h1>{watchlist.name}</h1>
+                        <p>{watchlist.description}</p>
 
-                    {/* Only render the tags section if there are tags */}
-                    {watchlist.tags.length > 0 && (
-                        <div className="tags">
-                            {watchlist.tags.map(tag => (
-                                <span key={tag} className="tag">{tag}</span>
-                            ))}
-                        </div>
-                    )}
+                        {/* Only render the tags section if there are tags */}
+                        {watchlist.tags.length > 0 && (
+                            <div className="tags">
+                                {watchlist.tags.map(tag => (
+                                    <span key={tag} className="tag">{tag}</span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            <div className="detail-body">
+                <div className="detail-body">
 
-                {/* Search section, ref attached so click-outside detection works */}
-                <div ref={searchRef}>
-                    <form onSubmit={handleSearch} className="search-form">
-                        <input
-                            type="text"
-                            placeholder="Search to add movies..."
-                            className="search-input"
-                            value={searchQuery}
-                            onChange={e => setSearchQuery(e.target.value)}
-                        />
-                        {searchResults.length > 0
-                            ? <button type="button" className="search-btn dismiss-btn" onClick={dismissSearch}>✕</button>
-                            : <button type="submit" className="search-btn">{searching ? "..." : "Search"}</button>
-                        }
-                    </form>
-                    
-                    {/* Only show results section if there are results */}
-                    {searchResults.length > 0 && (
-                        <section className="detail-section">
-                            <h2>Results</h2>
+                    {/* Search section, ref attached so click-outside detection works */}
+                    <div ref={searchRef}>
+                        <form onSubmit={handleSearch} className="search-form">
+                            <input
+                                type="text"
+                                placeholder="Search to add movies..."
+                                className="search-input"
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                            />
+                            {searchResults.length > 0
+                                ? <button type="button" className="search-btn dismiss-btn" onClick={dismissSearch}>✕</button>
+                                : <button type="submit" className="search-btn">{searching ? "..." : "Search"}</button>
+                            }
+                        </form>
+                        
+                        {/* Only show results section if there are results */}
+                        {searchResults.length > 0 && (
+                            <section className="detail-section">
+                                <h2>Results</h2>
+                                <div className="movies-grid">
+                                    {searchResults.map(movie => (
+                                        <div key={movie.id} className="detail-movie-item">
+                                            <MovieCard movie={movie} />
+                                            <button
+                                                className={`watchlist-toggle-btn ${isInWatchlist(movie.id) ? "in-list" : ""} ${addedIds.has(movie.id) ? "just-added" : ""}`}
+                                                onClick={() => handleToggle(movie)}
+                                            >
+                                                {addedIds.has(movie.id) ? "✓ Added" : isInWatchlist(movie.id) ? "Remove" : "+ Add"}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+                    </div>
+
+                    {/* Movies in watchlist */}
+                    <section className="detail-section">
+                        <h2>In this watchlist ({watchlist.movies.length})</h2>
+                        {loading ? (
+                            <p className="detail-empty">Loading...</p>
+                        ) : movies.length === 0 ? (
+                            <p className="detail-empty">No movies yet. Search above to add some.</p>
+                        ) : (
                             <div className="movies-grid">
-                                {searchResults.map(movie => (
+                                {movies.map(movie => (
                                     <div key={movie.id} className="detail-movie-item">
                                         <MovieCard movie={movie} />
                                         <button
-                                            className={`watchlist-toggle-btn ${isInWatchlist(movie.id) ? "in-list" : ""} ${addedIds.has(movie.id) ? "just-added" : ""}`}
+                                            className="watchlist-toggle-btn in-list"
                                             onClick={() => handleToggle(movie)}
                                         >
-                                            {addedIds.has(movie.id) ? "✓ Added" : isInWatchlist(movie.id) ? "Remove" : "+ Add"}
+                                            Remove
                                         </button>
                                     </div>
                                 ))}
                             </div>
-                        </section>
-                    )}
+                        )}
+                    </section>
                 </div>
 
-                {/* Movies in watchlist */}
-                <section className="detail-section">
-                    <h2>In this watchlist ({watchlist.movies.length})</h2>
-                    {loading ? (
-                        <p className="detail-empty">Loading...</p>
-                    ) : movies.length === 0 ? (
-                        <p className="detail-empty">No movies yet. Search above to add some.</p>
-                    ) : (
-                        <div className="movies-grid" id="preview">
-                            {movies.map(movie => (
-                                <div key={movie.id} className="detail-movie-item">
-                                    <MovieCard movie={movie} />
-                                    <button
-                                        className="watchlist-toggle-btn in-list"
-                                        onClick={() => handleToggle(movie)}
-                                    >
-                                        Remove
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </section>
+                <button onClick={handleCapture}> 
+                    Download as Image
+                </button>
             </div>
-
-            <button onClick={handleCapture}> 
-                Download as Image
-            </button>
         </div>
     )
 }
