@@ -2,10 +2,13 @@ import { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 // useParams reads from the URL (the :watchlistId part)
 
+import html2canvas from 'html2canvas';
+
 import { useMovieContext } from "../contexts/MovieContext"
 import { getMovieById, searchMovies } from "../services/api"
 import MovieCard from "../components/MovieCard"
 import "../css/WatchlistDetail.css"
+
 
 function WatchlistDetail() {
 
@@ -37,6 +40,17 @@ function WatchlistDetail() {
     const searchRef = useRef(null)
 
     // SCREENSHOT TAKING
+    const handleCapture = async () => {
+        const element = document.getElementById('preview');
+        if (element) {
+        const canvas = await html2canvas(element, { allowTaint: true, foreignObjectRendering: true });
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'preview.png';
+        link.click();
+        }
+    };
+
 
 
     // find the watchlist that matches the ID in the URL
@@ -209,7 +223,7 @@ function WatchlistDetail() {
                     ) : movies.length === 0 ? (
                         <p className="detail-empty">No movies yet. Search above to add some.</p>
                     ) : (
-                        <div className="movies-grid">
+                        <div className="movies-grid" id="preview">
                             {movies.map(movie => (
                                 <div key={movie.id} className="detail-movie-item">
                                     <MovieCard movie={movie} />
@@ -225,6 +239,10 @@ function WatchlistDetail() {
                     )}
                 </section>
             </div>
+
+            <button onClick={handleCapture}> 
+                Download as Image
+            </button>
         </div>
     )
 }
