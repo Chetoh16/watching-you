@@ -4,6 +4,8 @@ import { useParams, useNavigate } from "react-router-dom"
 
 import html2canvas from 'html2canvas';
 
+import {Share} from 'lucide-react';
+
 import { useMovieContext } from "../contexts/MovieContext"
 import { getMovieById, searchMovies } from "../services/api"
 import MovieCard from "../components/MovieCard"
@@ -293,8 +295,9 @@ function WatchlistDetail() {
                     </section>
                 </div>
             </div>
-            <button onClick={handleCapture}> 
-                Download as Image
+            <button onClick={handleCapture} className="captureButton" > 
+                <Share> </Share> 
+                <p>Download as Image</p>
             </button>
         </div>
     )
