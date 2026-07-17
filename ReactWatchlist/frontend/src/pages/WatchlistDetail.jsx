@@ -43,8 +43,16 @@ function WatchlistDetail() {
     const screenshotRef = useRef(null)
 
     const handleCapture = async () => {
-        const canvas = await html2canvas(screenshotRef.current, { allowTaint: true, foreignObjectRendering: true, useCORS: true, });
+        const canvas = await html2canvas(screenshotRef.current, {
+            useCORS: true,         
+            // needed for external images (movie posters from TMDB)
 
+            backgroundColor: "#1a1a1a",  
+            // match app background
+
+            scale: 2               
+            // 2x resolution for sharper image
+        })
         const link = document.createElement('a');
         link.href = canvas.toDataURL('image/png');
         link.download = 'preview.png';
