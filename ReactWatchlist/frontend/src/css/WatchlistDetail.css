@@ -98,6 +98,14 @@
     border-color: transparent;
 }
 
+.captureButton{ 
+    width: 10%;
+    margin-left: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* To disable animations when taking a snapshot */
 .no-transitions-snapshot * {
     transition: none !important;
