@@ -248,11 +248,10 @@ function WatchlistDetail() {
                         )}
                     </section>
                 </div>
-
-                <button onClick={handleCapture}> 
-                    Download as Image
-                </button>
             </div>
+            <button onClick={handleCapture}> 
+                Download as Image
+            </button>
         </div>
     )
 }
