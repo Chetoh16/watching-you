@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    
 }
 
 .detail-header {
@@ -95,4 +96,14 @@
 .dismiss-btn:hover {
     background: rgba(255,255,255,0.15);
     border-color: transparent;
+}
+
+/* To disable animations when taking a snapshot */
+.no-transitions-snapshot * {
+    transition: none !important;
+    animation: none !important;
+}
+
+.no-transitions-snapshot .movie-overlay {
+    visibility: hidden !important;
 }

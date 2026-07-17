@@ -17,10 +17,13 @@ function MovieCard({movie}){
         else addToFavourites(movie)
     }
 
+    const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}?cors`;
+    // appending '?cors' bypasses the cached non-CORS image and forces a fresh request
+    // THIS IS CALLED CACHE BUSTING HOW FUN
 
     return <div className="movie-card">
         <div className ="movie-poster">
-            <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title}/>
+            <img src={posterUrl} alt={movie.title} crossOrigin="anonymous"/>
             <div className="movie-overlay">
                 <button className="favourite-btn" onClick={onFavouriteClick}>
                     {favourite ? "❤️" : "💔"}

@@ -2,39 +2,108 @@ import { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 // useParams reads from the URL (the :watchlistId part)
 
+import html2canvas from 'html2canvas';
+
 import { useMovieContext } from "../contexts/MovieContext"
 import { getMovieById, searchMovies } from "../services/api"
 import MovieCard from "../components/MovieCard"
 import "../css/WatchlistDetail.css"
 
+
 function WatchlistDetail() {
 
+    const { watchlistId } = useParams()
     // watchlistId comes from the URL
     // now it can be used as a string
-    const { watchlistId } = useParams()
 
+    const navigate = useNavigate()
     // navigate() allows URL to be changed
     // navigate("/watchlists") acts like clicking a link to /watchlists.
-    const navigate = useNavigate()
 
-    // get everything needed from the global context
     const { watchlists, addMovieToWatchlist, removeMovieFromWatchlist } = useMovieContext()
+    // get everything needed from the global context
 
-    // full movie objects fetched from TMDB (NOT stored in context as context only has IDs)
+
     const [movies, setMovies] = useState([])
+    // full movie objects fetched from TMDB (NOT stored in context as context only has IDs)
+
 
     const [searchQuery, setSearchQuery] = useState("")
     const [searchResults, setSearchResults] = useState([])
     const [loading, setLoading] = useState(true)
     const [searching, setSearching] = useState(false)
 
+    const [addedIds, setAddedIds] = useState(new Set())  
     // a Set of movie IDs that were recently added
     // set is used instead of array because Set.has() is O(1) lookup
-    const [addedIds, setAddedIds] = useState(new Set())  
 
+
+    const searchRef = useRef(null)
     // useRef creates a reference to a DOM element without causing re-renders
     // attach this to the search container div to detect clicks outside it
-    const searchRef = useRef(null)
+
+    // SNAPSHOT TAKING
+    const snapshotRef = useRef(null)
+    // use in a div to select the section to be snapshotted
+
+    // the problem is: 
+    // html2canvas can't read images from other websites (TMDB) due to browser security
+    // so need to use CORS
+    const handleCapture = async () => {
+        if (!snapshotRef.current) return;
+
+        // hide overlays so they don't affect the screenshot
+        const overlays = snapshotRef.current.querySelectorAll('.movie-overlay')
+        for (const overlay of overlays) {
+            overlay.style.visibility = 'hidden';
+        }
+
+        // add a temporary class to hide overlays & kill transitions instantly (inside the snapshot before capturing)
+        // `no-transitions-snapshot` is defined in WatchlistDetail,css
+        snapshotRef.current.classList.add('no-transitions-snapshot');
+
+        try{
+            const canvas = await html2canvas(snapshotRef.current, {
+                backgroundColor: "#1a1a1a",
+                // background colour for the snapshot
+
+                scale: 2,
+                // sharper 2x resolution
+
+                useCORS: true, 
+                // tell html2canvas to use CORS
+
+                //logging: false
+                // to disable extra log messages in the console
+
+                ignoreElements: (element) =>{
+                    // Return true to exclude the element
+                    return element.classList.contains('search-class');
+                }
+            })
+
+            // trigger a download
+            const link = document.createElement('a')
+            link.download = `${watchlist.name}.png`;
+            link.href = canvas.toDataURL('image/png')
+            link.click()
+        }
+        catch(error){
+            console.error("Something wrong with your snapshot my man.")
+        } finally {
+            // remove the class to instantly restore everything to normal
+            snapshotRef.current.classList.remove('no-transitions-snapshot');
+        }
+
+        // restore overlays after capture
+        for(const overlay of overlays){
+            overlay.style.visibility = ''
+        }
+    };
+
+
+        
+
 
     // find the watchlist that matches the ID in the URL
     const watchlist = watchlists.find(w => w.id === watchlistId)
@@ -140,88 +209,93 @@ function WatchlistDetail() {
 
     return (
         <div className="watchlist-detail">
-            
-            {/* Header uses the watchlist's custom colour as background */}
-            <div className="detail-header" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
-                <button className="back-btn" onClick={() => navigate("/watchlists")}>← Back</button>
-                <div className="detail-header-text">
-                    <h1>{watchlist.name}</h1>
-                    <p>{watchlist.description}</p>
+            <div ref={snapshotRef}>
+                {/* Header uses the watchlist's custom colour as background */}
+                <div className="detail-header" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
+                    <button className="back-btn" onClick={() => navigate("/watchlists")}>← Back</button>
+                    <div className="detail-header-text">
+                        <h1>{watchlist.name}</h1>
+                        <p>{watchlist.description}</p>
 
-                    {/* Only render the tags section if there are tags */}
-                    {watchlist.tags.length > 0 && (
-                        <div className="tags">
-                            {watchlist.tags.map(tag => (
-                                <span key={tag} className="tag">{tag}</span>
-                            ))}
-                        </div>
-                    )}
+                        {/* Only render the tags section if there are tags */}
+                        {watchlist.tags.length > 0 && (
+                            <div className="tags">
+                                {watchlist.tags.map(tag => (
+                                    <span key={tag} className="tag">{tag}</span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            <div className="detail-body">
+                <div className="detail-body">
 
-                {/* Search section, ref attached so click-outside detection works */}
-                <div ref={searchRef}>
-                    <form onSubmit={handleSearch} className="search-form">
-                        <input
-                            type="text"
-                            placeholder="Search to add movies..."
-                            className="search-input"
-                            value={searchQuery}
-                            onChange={e => setSearchQuery(e.target.value)}
-                        />
-                        {searchResults.length > 0
-                            ? <button type="button" className="search-btn dismiss-btn" onClick={dismissSearch}>✕</button>
-                            : <button type="submit" className="search-btn">{searching ? "..." : "Search"}</button>
-                        }
-                    </form>
-                    
-                    {/* Only show results section if there are results */}
-                    {searchResults.length > 0 && (
-                        <section className="detail-section">
-                            <h2>Results</h2>
+                    {/* Search section, ref attached so click-outside detection works */}
+                    {/* Added data-html2canvas-ignore to exclude it from the snapshot */}
+                    <div ref={searchRef} className="search-class" data-html2canvas-ignore="true">
+                        <form onSubmit={handleSearch} className="search-form">
+                            <input
+                                type="text"
+                                placeholder="Search to add movies..."
+                                className="search-input"
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                            />
+                            {searchResults.length > 0
+                                ? <button type="button" className="search-btn dismiss-btn" onClick={dismissSearch}>✕</button>
+                                : <button type="submit" className="search-btn">{searching ? "..." : "Search"}</button>
+                            }
+                        </form>
+                        
+                        {/* Only show results section if there are results */}
+                        {searchResults.length > 0 && (
+                            <section className="detail-section">
+                                <h2>Results</h2>
+                                <div className="movies-grid">
+                                    {searchResults.map(movie => (
+                                        <div key={movie.id} className="detail-movie-item">
+                                            <MovieCard movie={movie} />
+                                            <button
+                                                className={`watchlist-toggle-btn ${isInWatchlist(movie.id) ? "in-list" : ""} ${addedIds.has(movie.id) ? "just-added" : ""}`}
+                                                onClick={() => handleToggle(movie)}
+                                            >
+                                                {addedIds.has(movie.id) ? "✓ Added" : isInWatchlist(movie.id) ? "Remove" : "+ Add"}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+                    </div>
+
+                    {/* Movies in watchlist */}
+                    <section className="detail-section">
+                        <h2>In this watchlist ({watchlist.movies.length})</h2>
+                        {loading ? (
+                            <p className="detail-empty">Loading...</p>
+                        ) : movies.length === 0 ? (
+                            <p className="detail-empty">No movies yet. Search above to add some.</p>
+                        ) : (
                             <div className="movies-grid">
-                                {searchResults.map(movie => (
+                                {movies.map(movie => (
                                     <div key={movie.id} className="detail-movie-item">
                                         <MovieCard movie={movie} />
                                         <button
-                                            className={`watchlist-toggle-btn ${isInWatchlist(movie.id) ? "in-list" : ""} ${addedIds.has(movie.id) ? "just-added" : ""}`}
+                                            className="watchlist-toggle-btn in-list"
                                             onClick={() => handleToggle(movie)}
                                         >
-                                            {addedIds.has(movie.id) ? "✓ Added" : isInWatchlist(movie.id) ? "Remove" : "+ Add"}
+                                            Remove
                                         </button>
                                     </div>
                                 ))}
                             </div>
-                        </section>
-                    )}
+                        )}
+                    </section>
                 </div>
-
-                {/* Movies in watchlist */}
-                <section className="detail-section">
-                    <h2>In this watchlist ({watchlist.movies.length})</h2>
-                    {loading ? (
-                        <p className="detail-empty">Loading...</p>
-                    ) : movies.length === 0 ? (
-                        <p className="detail-empty">No movies yet. Search above to add some.</p>
-                    ) : (
-                        <div className="movies-grid">
-                            {movies.map(movie => (
-                                <div key={movie.id} className="detail-movie-item">
-                                    <MovieCard movie={movie} />
-                                    <button
-                                        className="watchlist-toggle-btn in-list"
-                                        onClick={() => handleToggle(movie)}
-                                    >
-                                        Remove
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </section>
             </div>
+            <button onClick={handleCapture}> 
+                Download as Image
+            </button>
         </div>
     )
 }
