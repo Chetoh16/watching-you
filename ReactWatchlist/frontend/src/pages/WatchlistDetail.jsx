@@ -52,9 +52,52 @@ function WatchlistDetail() {
     const handleCapture = async () => {
         if (!snapshotRef.current) return;
 
-    };
-        
+        // hide overlays so they don't affect the screenshot
+        const overlays = snapshotRef.current.querySelectorAll('.movie-overlay')
+        for (const overlay of overlays) {
+            overlay.style.visibility = 'hidden';
+        }
 
+        // add a temporary class to hide overlays & kill transitions instantly (inside the snapshot before capturing)
+        // `no-transitions-snapshot` is defined in WatchlistDetail,css
+        snapshotRef.current.classList.add('no-transitions-snapshot');
+
+        try{
+            const canvas = await html2canvas(snapshotRef.current, {
+                backgroundColor: "#1a1a1a",
+                // background colour for the snapshot
+
+                scale: 2,
+                // sharper 2x resolution
+
+                useCORS: true, 
+                // tell html2canvas to use CORS
+
+                //logging: false
+                // to disable extra log messages in the console
+            })
+
+            // trigger a download
+            const link = document.createElement('a')
+            link.download = `${watchlist.name}.png`;
+            link.href = canvas.toDataURL('image/png')
+            link.click()
+        }
+        catch(error){
+            console.error("Something wrong with your snapshot my man.")
+        } finally {
+            // remove the class to instantly restore everything to normal
+            snapshotRef.current.classList.remove('no-transitions-snapshot');
+        }
+
+        // restore overlays after capture
+        for(const overlay of overlays){
+            overlay.style.visibility = ''
+        }
+    };
+
+
+        
 
 
     // find the watchlist that matches the ID in the URL
