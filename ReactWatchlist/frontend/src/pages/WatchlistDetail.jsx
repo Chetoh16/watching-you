@@ -12,53 +12,53 @@ import "../css/WatchlistDetail.css"
 
 function WatchlistDetail() {
 
+    const { watchlistId } = useParams()
     // watchlistId comes from the URL
     // now it can be used as a string
-    const { watchlistId } = useParams()
 
+    const navigate = useNavigate()
     // navigate() allows URL to be changed
     // navigate("/watchlists") acts like clicking a link to /watchlists.
-    const navigate = useNavigate()
 
-    // get everything needed from the global context
     const { watchlists, addMovieToWatchlist, removeMovieFromWatchlist } = useMovieContext()
+    // get everything needed from the global context
 
-    // full movie objects fetched from TMDB (NOT stored in context as context only has IDs)
+
     const [movies, setMovies] = useState([])
+    // full movie objects fetched from TMDB (NOT stored in context as context only has IDs)
+
 
     const [searchQuery, setSearchQuery] = useState("")
     const [searchResults, setSearchResults] = useState([])
     const [loading, setLoading] = useState(true)
     const [searching, setSearching] = useState(false)
 
+    const [addedIds, setAddedIds] = useState(new Set())  
     // a Set of movie IDs that were recently added
     // set is used instead of array because Set.has() is O(1) lookup
-    const [addedIds, setAddedIds] = useState(new Set())  
 
+
+    const searchRef = useRef(null)
     // useRef creates a reference to a DOM element without causing re-renders
     // attach this to the search container div to detect clicks outside it
-    const searchRef = useRef(null)
 
-    // SCREENSHOT TAKING
+    // SNAPSHOT TAKING
     const snapshotRef = useRef(null)
+    // use in a div to select the section to be snapshotted
+
+    // the problem is: 
+    // html2canvas can't read images from other websites (TMDB) due to browser security
+    // So need to
+    // - swap every image src to a base64 string (raw image data) before capturing
+    // - html2canvas can read base64 since it's local data, not a URL
+    // - swap srcs back after capturing so the page looks normal
+    // weserv.nl is a free image proxy that fetches TMDB images server-side and 
+    // returns them with the CORS headers the browser needs
 
     const handleCapture = async () => {
-        const canvas = await html2canvas(snapshotRef.current, {
-            useCORS: true,         
-            // needed for external images (movie posters from TMDB)
-
-            backgroundColor: "#1a1a1a",  
-            // match app background
-
-            scale: 2               
-            // 2x resolution for sharper image
-        })
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png');
-        link.download = 'preview.png';
-        link.click();
+        
     }
-    
+        
 
 
 
