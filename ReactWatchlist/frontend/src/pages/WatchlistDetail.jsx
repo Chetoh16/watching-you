@@ -48,16 +48,11 @@ function WatchlistDetail() {
 
     // the problem is: 
     // html2canvas can't read images from other websites (TMDB) due to browser security
-    // So need to
-    // - swap every image src to a base64 string (raw image data) before capturing
-    // - html2canvas can read base64 since it's local data, not a URL
-    // - swap srcs back after capturing so the page looks normal
-    // weserv.nl is a free image proxy that fetches TMDB images server-side and 
-    // returns them with the CORS headers the browser needs
-
+    // so need to use CORS
     const handleCapture = async () => {
-        
-    }
+        if (!snapshotRef.current) return;
+
+    };
         
 
 
