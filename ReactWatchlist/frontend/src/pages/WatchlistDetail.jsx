@@ -43,20 +43,56 @@ function WatchlistDetail() {
     const snapshotRef = useRef(null)
 
     const handleCapture = async () => {
-        const canvas = await html2canvas(snapshotRef.current, {
-            useCORS: true,         
-            // needed for external images (movie posters from TMDB)
+        if (!snapshotRef.current) return
 
-            backgroundColor: "#1a1a1a",  
-            // match app background
+        try {
+            const images = snapshotRef.current.querySelectorAll('img')
 
-            scale: 2               
-            // 2x resolution for sharper image
-        })
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png');
-        link.download = 'preview.png';
-        link.click();
+            // Convert every image to base64 before html2canvas runs
+            await Promise.all(Array.from(images).map(img => {
+                return new Promise((resolve) => {
+                    const convert = (src) => {
+                        fetch(src)
+                            .then(res => res.blob())
+                            .then(blob => {
+                                const reader = new FileReader()
+                                reader.onloadend = () => {
+                                    img.src = reader.result
+                                    resolve()
+                                }
+                                reader.readAsDataURL(blob)
+                            })
+                            .catch(resolve)
+                    }
+
+                    if (img.complete && img.naturalWidth > 0) {
+                        convert(img.src)
+                    } else {
+                        img.onload = () => convert(img.src)
+                        img.onerror = resolve
+                    }
+                })
+            }))
+
+            // Small delay to let DOM update with new base64 srcs
+            await new Promise(r => setTimeout(r, 100))
+
+            const canvas = await html2canvas(snapshotRef.current, {
+                backgroundColor: "#1a1a1a",
+                scale: 2,
+                logging: false,
+                useCORS: false,
+                allowTaint: true
+            })
+
+            const link = document.createElement('a')
+            link.download = `${watchlist.name}.png`
+            link.href = canvas.toDataURL('image/png')
+            link.click()
+
+        } catch (err) {
+            console.error("Screenshot failed:", err)
+        }
     }
     
 
