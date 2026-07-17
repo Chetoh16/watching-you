@@ -40,10 +40,10 @@ function WatchlistDetail() {
     const searchRef = useRef(null)
 
     // SCREENSHOT TAKING
-    const screenshotRef = useRef(null)
+    const snapshotRef = useRef(null)
 
     const handleCapture = async () => {
-        const canvas = await html2canvas(screenshotRef.current, {
+        const canvas = await html2canvas(snapshotRef.current, {
             useCORS: true,         
             // needed for external images (movie posters from TMDB)
 
@@ -166,7 +166,7 @@ function WatchlistDetail() {
 
     return (
         <div className="watchlist-detail">
-            <div ref={screenshotRef}>
+            <div ref={snapshotRef}>
                 {/* Header uses the watchlist's custom colour as background */}
                 <div className="detail-header" style={{ backgroundColor: watchlist.colour || "#2a2a2a" }}>
                     <button className="back-btn" onClick={() => navigate("/watchlists")}>← Back</button>
