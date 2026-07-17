@@ -75,6 +75,11 @@ function WatchlistDetail() {
 
                 //logging: false
                 // to disable extra log messages in the console
+
+                ignoreElements: (element) =>{
+                    // Return true to exclude the element
+                    return element.classList.contains('search-class');
+                }
             })
 
             // trigger a download
@@ -226,7 +231,8 @@ function WatchlistDetail() {
                 <div className="detail-body">
 
                     {/* Search section, ref attached so click-outside detection works */}
-                    <div ref={searchRef}>
+                    {/* Added data-html2canvas-ignore to exclude it from the snapshot */}
+                    <div ref={searchRef} className="search-class" data-html2canvas-ignore="true">
                         <form onSubmit={handleSearch} className="search-form">
                             <input
                                 type="text"
