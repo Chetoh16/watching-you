@@ -5,4 +5,5 @@ import { useAuthContext } from '../contexts/AuthContext'
 function SignUp(){
 
 }
+
 export default SignUp
