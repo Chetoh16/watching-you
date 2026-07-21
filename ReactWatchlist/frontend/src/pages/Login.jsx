@@ -13,7 +13,7 @@ function Login(){
     const {signIn} = useAuthContext()
     const navigate = useNavigate
 
-    const handleLogin = async (e) => {
+    const handleSubmit = async (e) => {
         // prevents the browser's default behavior of reloading the entire web page on form submission.
         e.preventDefault()
 

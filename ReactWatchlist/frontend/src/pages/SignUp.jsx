@@ -14,7 +14,7 @@ function SignUp(){
     const signUp = useAuthContext()
     const navigate = useNavigate()
 
-    const handleSignUp = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         e.setError(null)
         e.setLoading(true)
