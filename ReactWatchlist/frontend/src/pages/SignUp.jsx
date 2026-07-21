@@ -16,8 +16,8 @@ function SignUp(){
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        e.setError(null)
-        e.setLoading(true)
+        setError(null)
+        setLoading(true)
 
         try{
             const result = await signUp(email, password)
