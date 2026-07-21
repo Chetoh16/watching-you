@@ -12,8 +12,6 @@ import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './contexts/AuthContext'
 
 function App() {
-
-
   return (
     // AuthProvider is outside MovieProvider because MovieContext
     // needs to know who's logged in to fetch the right data

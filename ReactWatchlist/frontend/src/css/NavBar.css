@@ -45,3 +45,16 @@
     padding: 0.5rem;
   }
 }
+
+.signout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+    padding: 0;
+    color: rgba(255,255,255,0.7);
+}
+.signout-btn:hover {
+    color: white;
+    border-color: transparent;
+}
