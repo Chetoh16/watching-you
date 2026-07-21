@@ -25,7 +25,7 @@ function SignUp(){
             // navigate to home on success
         }
         catch(err){
-            setError(err)
+            setError(err.message)
         }
         finally{
             setLoading(false)
@@ -52,7 +52,7 @@ function SignUp(){
         <div className="auth-page">
             <div className="auth-card">
                 <h1>Create Account</h1>
-                {error && <p className="auth-error">{error}</p>}
+                {error && <p className="auth-error">{error.message || error}</p>}
                 <form onSubmit={handleSubmit} className="auth-form">
                     <input
                         type="email"

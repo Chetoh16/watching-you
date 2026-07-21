@@ -40,7 +40,7 @@ function Login(){
         <div className="auth-page">
             <div className="auth-card">
                 <h1>Sign In</h1>
-                {error && <p className="auth-error">{error}</p>}
+                {error && <p className="auth-error">{error.message || error}</p>}
                 <form onSubmit={handleSubmit} className="auth-form">
                     <input
                         type="email"
