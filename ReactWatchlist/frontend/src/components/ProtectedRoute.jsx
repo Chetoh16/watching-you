@@ -1,4 +1,4 @@
-import { useAuthContext  } from "../context/AuthContext";
+import { useAuthContext  } from "../contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 
 // wraps any route that requires login.
