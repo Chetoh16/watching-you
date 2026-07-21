@@ -11,7 +11,7 @@ function SignUp(){
     const[error, setError] = useState(null)
     const[success, setSuccess] = useState(null)
     
-    const signUp = useAuthContext()
+    const {signUp} = useAuthContext()
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
