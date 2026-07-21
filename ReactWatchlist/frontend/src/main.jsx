@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { supabase } from './services/supabase'
 
 // Called "context"
 import{BrowserRouter} from "react-router-dom"
