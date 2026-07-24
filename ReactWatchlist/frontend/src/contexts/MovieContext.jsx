@@ -86,7 +86,7 @@ export const MovieProvider = ({children}) => {
         // fetch watchlists and their movie IDs in one query using a join
         const {data, error} = await supabase
             .from('watchlists')
-            .select(`id, name, description, colour, tags, created_at, watchlist_movies (movie_id)`)
+            .select(`id, name, description, colour, tags, created_at, share_token, watchlist_movies (movie_id)`)
             .eq('user_id', user.id)
             .order('created_at', {ascending: true})
         
