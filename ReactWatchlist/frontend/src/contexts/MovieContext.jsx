@@ -243,7 +243,7 @@ export const MovieProvider = ({children}) => {
 
     }
 
-
+    // Creates a token for a watchlist and adds that token to Supabase and then frontend React state
     const shareWatchlist = async (watchlistId) => {
         // create a token that's going to be used for sharing the url for the watchlist
         const token = crypto.randomUUID()
