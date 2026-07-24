@@ -10,6 +10,7 @@ import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './contexts/AuthContext'
+import SharedWatchlist from './pages/SharedWatchlist'
 
 function App() {
   return (
@@ -35,6 +36,9 @@ function App() {
                     <Route path="/watchlists/:watchlistId" element={
                         <ProtectedRoute><WatchlistDetail/></ProtectedRoute>
                     }/>
+
+                    {/* No ProtectedRoute since viewing is public (but sharedToken is nearly impossible to bruteforce) */}
+                    <Route path="/shared/:sharedToken" element={<SharedWatchlist/>}/>
                 </Routes>
             </main>
         </MovieProvider>
