@@ -243,6 +243,42 @@ export const MovieProvider = ({children}) => {
 
     }
 
+
+    const shareWatchlist = async (watchlistId) => {
+        // create a token that's going to be used for sharing the url for the watchlist
+        const token = crypto.randomUUID()
+
+        const { error } = await supabase
+            .from('watchlists')
+            .update({ share_token: token })
+            .eq('id', watchlistId)
+        
+        // if error not thrown, update the share_token with the new one (initially it's null)
+        if (!error) {
+            setWatchlists(prev => prev.map(w =>
+                w.id === watchlistId ? { ...w, share_token: token } : w
+            ))
+            return token
+        }
+    }
+
+    const unshareWatchlist = async (watchlistId) => {
+        const token = null
+
+        const {error} = await supabase
+            .from('watchlists')
+            .update({share_token: token})
+            .eq('id', watchlistId)
+
+        // if error not thrown, set the token to null so it's not acessible by anyone other than the creator
+        if (!error) {
+            setWatchlists(prev => prev.map(w =>
+                w.id === watchlistId ? { ...w, share_token: token } : w
+            ))
+            return token
+        }
+    }
+
     // everything in this object is accessible to any component that calls useMovieContext()
     const value = {
         favourites,
