@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom"
 
 import html2canvas from 'html2canvas';
 
-import {Share} from 'lucide-react';
+import {Share, ArrowLeft} from 'lucide-react';
 
 import { useMovieContext } from "../contexts/MovieContext"
 import { getMovieById, searchMovies } from "../services/api"
@@ -35,18 +35,23 @@ function WatchlistDetail() {
     const [loading, setLoading] = useState(true)
     const [searching, setSearching] = useState(false)
 
-    const [addedIds, setAddedIds] = useState(new Set())  
     // a Set of movie IDs that were recently added
     // set is used instead of array because Set.has() is O(1) lookup
+    const [addedIds, setAddedIds] = useState(new Set())  
 
 
-    const searchRef = useRef(null)
+    // feedback used for indicating the url generated for the watchlist url is copied
+    const [linkCopied, setLinkCopied] = useState(false)
+
     // useRef creates a reference to a DOM element without causing re-renders
     // attach this to the search container div to detect clicks outside it
+    const searchRef = useRef(null)
+
 
     // SNAPSHOT TAKING
-    const snapshotRef = useRef(null)
+
     // use in a div to select the section to be snapshotted
+    const snapshotRef = useRef(null)
 
     // the problem is: 
     // html2canvas can't read images from other websites (TMDB) due to browser security
@@ -66,14 +71,16 @@ function WatchlistDetail() {
 
         try{
             const canvas = await html2canvas(snapshotRef.current, {
-                backgroundColor: "#1a1a1a",
+
                 // background colour for the snapshot
+                backgroundColor: "#1a1a1a",
 
-                scale: 2,
                 // sharper 2x resolution
+                scale: 2,
 
-                useCORS: true, 
                 // tell html2canvas to use CORS
+                useCORS: true, 
+
 
                 //logging: false
                 // to disable extra log messages in the console
@@ -183,22 +190,25 @@ function WatchlistDetail() {
     const handleToggle = (movie) => {
         if (isInWatchlist(movie.id)) {
 
+            // remove from context
             removeMovieFromWatchlist(watchlistId, movie.id)
-            // remove from context (updates localStorage)
 
-            setMovies(prev => prev.filter(m => m.id !== movie.id))
             // remove from local movies state (updates what's visible on screen)
+            setMovies(prev => prev.filter(m => m.id !== movie.id))
+
 
             setAddedIds(prev => { const n = new Set(prev); n.delete(movie.id); return n })
         } else {
 
+            // add to context
             addMovieToWatchlist(watchlistId, movie)
-            // add to context (stores the ID in localStorage)
 
-            setMovies(prev => [...prev, movie])
             // add full movie object to local state (so it shows in the list immediately)
+            setMovies(prev => [...prev, movie])
+
 
             setAddedIds(prev => new Set(prev).add(movie.id))
+            
             // clear the "added" indicator after 2 seconds
             setTimeout(() => {
                 setAddedIds(prev => { const n = new Set(prev); n.delete(movie.id); return n })
@@ -208,6 +218,25 @@ function WatchlistDetail() {
 
     // early return
     if (!watchlist) return null
+
+
+    const handleShare = async () => {
+        let token = watchlist.share_token
+        if (!token) {
+            token = await shareWatchlist(watchlist.id)
+        }
+        
+        // build full url
+        const url = `${window.location.origin}/shared/${token}`
+
+        // uses the browser's native API to copy the formatted url string straight to the user's system clipboard
+        navigator.clipboard.writeText(url)
+
+        // give user feedback that their url is copied
+        setLinkCopied(true)
+        setTimeout(() => setLinkCopied(false), 2000)
+
+    }
 
     return (
         <div className="watchlist-detail">
@@ -295,10 +324,28 @@ function WatchlistDetail() {
                     </section>
                 </div>
             </div>
-            <button onClick={handleCapture} className="captureButton" > 
-                <Share> </Share> 
-                <p>Download as Image</p>
-            </button>
+            {/* Action buttons */}
+            <div className="detail-actions">
+                <button className="back-btn" onClick={() => navigate("/watchlists")}>
+                    <ArrowLeft />
+                </button>
+
+                <div className="share-actions">
+                    <button className="snapshot-btn" onClick={handleShare}>
+                        {linkCopied ? "✓ Link Copied!" : watchlist.share_token ? "🔗 Copy Link" : "🔗 Share"}
+                    </button>
+                    {watchlist.share_token && (
+                        <button className="unshare-btn" onClick={handleUnshare}>
+                            Stop Sharing
+                        </button>
+                    )}
+                </div>
+
+                <button className="snapshot-btn" onClick={handleCapture}>
+                    <Share />
+                    <p>Download Image</p>
+                </button>
+            </div>
         </div>
     )
 }

@@ -115,3 +115,34 @@
 .no-transitions-snapshot .movie-overlay {
     visibility: hidden !important;
 }
+
+.detail-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-wrap: wrap;
+}
+
+.share-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.unshare-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.4);
+    border-radius: 8px;
+    padding: 0.5em 1em;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.unshare-btn:hover {
+    color: rgba(255,120,120,0.9);
+    border-color: rgba(180,40,40,0.4);
+    background: rgba(180,40,40,0.1);
+}

@@ -41,11 +41,13 @@ function WatchlistCard({ watchlist }) {
             <div className="card-body" onClick={e => e.stopPropagation()}>
                 <input
                     className="card-name"
+                    maxLength={100}
                     value={watchlist.name}
                     onChange={e => updateWatchlist(watchlist.id, { name: e.target.value })}
                 />
                 <textarea
                     className="card-desc"
+                    maxLength={500}
                     rows={2}
                     value={watchlist.description}
                     onChange={e => updateWatchlist(watchlist.id, { description: e.target.value })}

@@ -86,7 +86,7 @@ export const MovieProvider = ({children}) => {
         // fetch watchlists and their movie IDs in one query using a join
         const {data, error} = await supabase
             .from('watchlists')
-            .select(`id, name, description, colour, tags, created_at, watchlist_movies (movie_id)`)
+            .select(`id, name, description, colour, tags, created_at, share_token, watchlist_movies (movie_id)`)
             .eq('user_id', user.id)
             .order('created_at', {ascending: true})
         
@@ -243,6 +243,42 @@ export const MovieProvider = ({children}) => {
 
     }
 
+    // Creates a token for a watchlist and adds that token to Supabase and then frontend React state
+    const shareWatchlist = async (watchlistId) => {
+        // create a token that's going to be used for sharing the url for the watchlist
+        const token = crypto.randomUUID()
+
+        const { error } = await supabase
+            .from('watchlists')
+            .update({ share_token: token })
+            .eq('id', watchlistId)
+        
+        // if error not thrown, update the share_token with the new one (initially it's null)
+        if (!error) {
+            setWatchlists(prev => prev.map(w =>
+                w.id === watchlistId ? { ...w, share_token: token } : w
+            ))
+            return token
+        }
+    }
+
+    const unshareWatchlist = async (watchlistId) => {
+        const token = null
+
+        const {error} = await supabase
+            .from('watchlists')
+            .update({share_token: token})
+            .eq('id', watchlistId)
+
+        // if error not thrown, set the token to null so it's not acessible by anyone other than the creator
+        if (!error) {
+            setWatchlists(prev => prev.map(w =>
+                w.id === watchlistId ? { ...w, share_token: token } : w
+            ))
+            return token
+        }
+    }
+
     // everything in this object is accessible to any component that calls useMovieContext()
     const value = {
         favourites,
@@ -256,7 +292,9 @@ export const MovieProvider = ({children}) => {
         addMovieToWatchlist,
         removeMovieFromWatchlist,
         addTag,
-        removeTag
+        removeTag,
+        shareWatchlist,
+        unshareWatchlist
     }
 
     // MovieContext.Provider is what makes the value available to all descendant components. 
