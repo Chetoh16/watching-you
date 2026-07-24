@@ -38,7 +38,7 @@ function App() {
                     }/>
 
                     {/* No ProtectedRoute since viewing is public (but sharedToken is nearly impossible to bruteforce) */}
-                    <Route path="/shared/:sharedToken" element={<SharedWatchlist/>}/>
+                    <Route path="/shared/:shareToken" element={<SharedWatchlist/>}/>
                 </Routes>
             </main>
         </MovieProvider>
