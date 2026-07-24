@@ -22,7 +22,7 @@ function WatchlistDetail() {
     // navigate() allows URL to be changed
     // navigate("/watchlists") acts like clicking a link to /watchlists.
 
-    const { watchlists, addMovieToWatchlist, removeMovieFromWatchlist } = useMovieContext()
+    const { watchlists, addMovieToWatchlist, removeMovieFromWatchlist, shareWatchlist, unshareWatchlist } = useMovieContext()
     // get everything needed from the global context
 
 
@@ -236,6 +236,13 @@ function WatchlistDetail() {
         setLinkCopied(true)
         setTimeout(() => setLinkCopied(false), 2000)
 
+    }
+
+    const handleUnshare = async () => {
+
+        // old token is gone so anyone with the old URL gets "not found"
+        await unshareWatchlist(watchlist.id)
+        
     }
 
     return (
