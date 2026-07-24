@@ -292,7 +292,9 @@ export const MovieProvider = ({children}) => {
         addMovieToWatchlist,
         removeMovieFromWatchlist,
         addTag,
-        removeTag
+        removeTag,
+        shareWatchlist,
+        unshareWatchlist
     }
 
     // MovieContext.Provider is what makes the value available to all descendant components. 
