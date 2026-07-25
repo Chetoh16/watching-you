@@ -279,6 +279,52 @@ export const MovieProvider = ({children}) => {
         }
     }
 
+    const copyWatchlist = async (watchlist) => {
+
+        if (watchlists.length >= 10) {
+            throw new Error("Maximum number of watchlists reached.")
+        }
+
+        // create the new watchlist
+        const { data, error } = await supabase
+            .from('watchlists')
+            .insert({
+                user_id: user.id,
+                name: `${watchlist.name} (copy)`,
+                description: watchlist.description,
+                colour: watchlist.colour,
+                tags: watchlist.tags,
+                // copy is private by default
+                share_token: null  
+            })
+            .select()
+            .single()
+
+        // copy all the movies across
+        const movieRows = watchlist.watchlist_movies.map(m => ({
+            watchlist_id: data.id,
+            movie_id: m.movie_id
+        }))
+
+        // insert copied movies
+        if (movieRows.length > 0) {
+            const { error: movieError } = await supabase
+                .from('watchlist_movies')
+                .insert(movieRows)
+            if (movieError) throw movieError
+        }
+
+        // update local state so the copied list appears instantly
+        const newWatchlistEntry = {
+            ...data,
+            movies: sourceWatchlist.watchlist_movies.map(m => m.movie_id)
+        }
+
+        setWatchlists(prev => [...prev, newWatchlistEntry])
+
+        return data
+    }
+
     // everything in this object is accessible to any component that calls useMovieContext()
     const value = {
         favourites,
@@ -294,7 +340,8 @@ export const MovieProvider = ({children}) => {
         addTag,
         removeTag,
         shareWatchlist,
-        unshareWatchlist
+        unshareWatchlist,
+        copyWatchlist
     }
 
     // MovieContext.Provider is what makes the value available to all descendant components. 
