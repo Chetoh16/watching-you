@@ -45,7 +45,6 @@ npm run dev
 
 
 ## Future Enhancements
-- Implement a backend to securely handle API requests
 - Ability to add personal notes for each movie
 - Rate movies
 - Darkmode and Lightmode
