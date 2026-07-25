@@ -5,6 +5,7 @@ import { useAuthContext } from '../contexts/AuthContext'
 import { getMovieById } from '../services/api'
 import MovieCard from '../components/MovieCard'
 import '../css/WatchlistDetail.css'
+import { useMovieContext } from '../contexts/MovieContext'
 
 function SharedWatchlist() {
 
@@ -13,6 +14,8 @@ function SharedWatchlist() {
 
     // get user data
     const { user } = useAuthContext()
+
+    const { copyWatchlist } = useMovieContext()
 
     const [watchlist, setWatchlist] = useState(null)
     const [movies, setMovies] = useState([])
@@ -24,6 +27,8 @@ function SharedWatchlist() {
     const [copying, setCopying] = useState(false)
     // controls success UI feedback after copying
     const [copied, setCopied] = useState(false)
+    // limit of watchlists
+    const [limitReached, setLimitReached] = useState(false)
 
     // trigger data fetching whenever the token changes
     useEffect(() => {
@@ -75,42 +80,17 @@ function SharedWatchlist() {
         // user has to be authenticated
         if (!user) return
         setCopying(true)
-
+        setLimitReached(false)
+        
         try {
-            // create the new watchlist
-            const { data, error } = await supabase
-                .from('watchlists')
-                .insert({
-                    user_id: user.id,
-                    name: `${watchlist.name} (copy)`,
-                    description: watchlist.description,
-                    colour: watchlist.colour,
-                    tags: watchlist.tags,
-                    // copy is private by default
-                    share_token: null  
-                })
-                .select()
-                .single()
-
-            if (error) throw error
-
-            // copy all the movies across
-            const movieRows = watchlist.watchlist_movies.map(m => ({
-                watchlist_id: data.id,
-                movie_id: m.movie_id
-            }))
-
-            // insert copied movies
-            if (movieRows.length > 0) {
-                const { error: movieError } = await supabase
-                    .from('watchlist_movies')
-                    .insert(movieRows)
-                if (movieError) throw movieError
-            }
-
+            await copyWatchlist(watchlist)
             setCopied(true)
         } catch (err) {
-            console.error("Failed to copy your beautiful watchlist:", err)
+            if (err.message === "Maximum number of watchlists reached.") {
+                setLimitReached(true)
+            } else {
+                console.error("Failed to copy watchlist:", err)
+            }
         } finally {
             setCopying(false)
         }
@@ -161,6 +141,10 @@ function SharedWatchlist() {
                         {copied ? (
                             <p style={{ color: 'rgba(100,220,130,0.95)' }}>
                                 ✓ Copied to your watchlists
+                            </p>
+                        ) : limitReached ? (
+                            <p style={{ color: '#ff6b6b' }}>
+                                You've reached the maximum number watchlists. Sort it out.
                             </p>
                         ) : (
                             <button
