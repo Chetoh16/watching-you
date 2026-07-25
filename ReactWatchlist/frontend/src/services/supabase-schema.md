@@ -1,5 +1,9 @@
 ```bash
 
+
+-- TABLES
+-- ------------------------------------------------------------
+
 -- watchlists: one row per watchlist, linked to a user
 create table watchlists (
   id uuid primary key default gen_random_uuid(),
@@ -34,7 +38,18 @@ create table profiles (
   created_at timestamptz default now()
 );
 
-alter table watchlists add column tags text[] default '{}';
+-- ROW LEVEL SECURITY
+-- ------------------------------------------------------------
+ 
+alter table profiles enable row level security;
+alter table watchlists enable row level security;
+alter table watchlist_movies enable row level security;
+alter table favourites enable row level security;
+
+
+
+-- FUNCTIONS
+-- ------------------------------------------------------------
 
 -- Create a function that runs on signup
 create or replace function handle_new_user()
@@ -69,6 +84,9 @@ create trigger on_auth_user_created
   for each row execute procedure handle_new_user();
 
 
+
+-- POLICIES
+-- ------------------------------------------------------------
 
 -- PROFILES: users can only read and update their own profile
 create policy "Users can view own profile"
