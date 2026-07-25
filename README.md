@@ -21,27 +21,7 @@ The application retrieves movie data from the TMDB API and displays popular movi
 
 
 ## Installation Guide  
-
-### 1. Clone the repository  
-```bash
-git clone <https://github.com/Chetoh16/watching-you>
-cd ReactWatchlist/frontend
-```
-### 2. Install dependencies
-```bash
-npm install
-```
-### 3. Create an `.env` file
-- Inside `frontend`, add your environment variables:
-```bash
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_KEY=your_supabase_anon_key
-VITE_TMDB_API_KEY=your_tmdb_api_key
-```
-### 4. Run the app
-```bash
-npm run dev
-```
+- For the full installation and set up guide, go to [CONTRIBUTION.MD](https://github.com/Chetoh16/watching-you/blob/main/CONTRIBUTING.md#getting-started)
 
 
 ## Future Enhancements
