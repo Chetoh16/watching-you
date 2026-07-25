@@ -1,4 +1,4 @@
-## V2.2.0 - Share Watchlist (2026-07-25)
+## V2.2.1 - Share Watchlist (2026-07-25)
 ### Fixed
 - Watchlist limit enforced on copying shared watchlists.
 
