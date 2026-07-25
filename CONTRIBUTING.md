@@ -22,9 +22,9 @@ First off, thanks for taking the time to contribute!
 
 ## Project Overview
 
-WatchingYou is a movie watchlist app. Users can search for movies using the TMDB API, favourite movies, create multiple watchlists, add movies to those watchlists, and share watchlists via a unique link.
+WatchingYou is a movie watchlist app. Users can search for movies using the TMDB API, favourite movies, create watchlists, add movies to those watchlists, and share watchlists via unique links.
 
-The frontend is a React application. The backend is Supabase, which provides a PostgreSQL database, authentication, and row level security.
+The frontend is a React application. The backend is Supabase which provides a PostgreSQL database to store user data such as watchlists, movies inside watchlists etc.
 
 ---
 
@@ -34,7 +34,6 @@ The frontend is a React application. The backend is Supabase, which provides a P
 |---|---|
 | Frontend framework | React 18 |
 | Build tool | Vite |
-| Routing | React Router v6 |
 | Backend and database | Supabase (PostgreSQL) |
 | Authentication | Supabase Auth |
 | Movie data | TMDB API |
@@ -53,7 +52,7 @@ The frontend is a React application. The backend is Supabase, which provides a P
 
 ### 1. Clone the repository  
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/Chetoh16/watching-you>
 cd ReactWatchlist/frontend
 ```
 ### 2. Install dependencies
@@ -61,7 +60,7 @@ cd ReactWatchlist/frontend
 npm install
 ```
 ### 3. Create an `.env` file
-- Inside frontend/, add your environment variables:
+- Inside `frontend`, add your environment variables:
 ```bash
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_KEY=your_supabase_anon_key
@@ -70,12 +69,7 @@ VITE_TMDB_API_KEY=your_tmdb_api_key
 
 ### Database setup
 
-NEED TO CREATE watchlists, watchlist_movies, AND favourites MANUALLY. CHECK [Data Model](#data-model) FOR DETAILS.
-
 Run the SQL in [supabase-schema](./ReactWatchlist/frontend/src/services/supabase-schema.md) in your Supabase SQL editor. This creates all tables, foreign keys, and RLS policies.
-
-
-
 
 ---
 

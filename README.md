@@ -32,7 +32,7 @@ cd ReactWatchlist/frontend
 npm install
 ```
 ### 3. Create an `.env` file
-- Inside `frontend/`, add your environment variables:
+- Inside `frontend`, add your environment variables:
 ```bash
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_KEY=your_supabase_anon_key
