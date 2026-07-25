@@ -1,3 +1,13 @@
+## V2.2.0 - Share Watchlist (2026-07-25)
+### Fixed
+- Watchlist limit enforced on copying shared watchlists.
+
+### Added
+- Turned the project into an Open Source project.
+- Button for copying the shared watchlist into your own watchlists page.
+- Button for sharing a watchlist.
+- New row in the watchlist table for the URL that is created when you share the watchlist.
+
 ## V2.1.0 - Supabase Integration (2026-07-21)
 ### Added 
 - Sign Up and Sign In Page

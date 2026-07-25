@@ -71,12 +71,12 @@ function SignUp(){
                     />
                     <input
                         type="password"
-                        placeholder="Password (min 6 characters)"
+                        placeholder="Password (min 8 characters)"
                         className="search-input"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         required
-                        minLength={6}
+                        minLength={8}
                     />
                     <button type="submit" className="search-btn" disabled={loading}>
                         {loading ? 'Creating account...' : 'Sign Up'}
