@@ -115,7 +115,6 @@ function Home() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
-            {console.log(searchResults)}
             {searchResults.length > 0
                 ? <button type="button" className="search-btn dismiss-btn" onClick={dismissSearch}>✕</button>
                 
