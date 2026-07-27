@@ -1,7 +1,7 @@
 import MovieCard from "../components/MovieCard"
 
 // called hook
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { searchMovies, getPopularMovies } from "../services/api"
 import "../css/Home.css"
 
@@ -15,6 +15,7 @@ function Home() {
     // convention: 1-name of state, 2-function to update state.
     // useState is default state
     const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([])
 
     // store in state so it persists. so anytime we update movies list, it will automatically re-render components
     const [movies, setMovies] = useState([]);
@@ -24,6 +25,10 @@ function Home() {
     // 2) Store any potential error
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    // useRef creates a reference to a DOM element without causing re-renders
+    // attach this to the search container div to detect clicks outside it
+    const searchRef = useRef(null)
 
     // useEffect(() => {}, [])
     // () => {}, []
@@ -48,6 +53,7 @@ function Home() {
     }, [])
 
 
+
     const handleSearch = async (e) => {
         e.preventDefault();  // to prevent default behaviour
         if (!searchQuery.trim()) return // won't allow empty searches
@@ -55,8 +61,8 @@ function Home() {
 
         setLoading(true)
         try{
-            const searchResults = await searchMovies(searchQuery)
-            setMovies(searchResults)
+            const results = await searchMovies(searchQuery)
+            setSearchResults(results)
             setError(null) // if we had error before, we're clearing it here
         } catch (err) {
             console.log(err)
@@ -64,11 +70,31 @@ function Home() {
         } finally{
             setLoading(false)
         }
+
         
         
 
         // setSearchQuery("")  // set state 
     };
+
+    // Close search results when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (searchRef.current && !searchRef.current.contains(e.target)) {
+                setSearchResults([])
+                setSearchQuery("")
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
+    
+    // Clears the search results and input
+    const dismissSearch = () => {
+        setSearchResults([])
+        setSearchQuery("")
+    }
+
 
 
     // .map function iterates over values inside the movies array (dynamic therefore need key)
@@ -78,7 +104,7 @@ function Home() {
     //onChange={(e) => setSearchQuery(e.target.value)} is how you update state from input element
 
 
-    return <div className="home">
+    return <div ref={searchRef}className="home">
         {/* text input controlled by React state (searchQuery).
           every keystroke updates the state via setSearchQuery */}
         <form onSubmit={handleSearch} className="search-form">
@@ -89,7 +115,12 @@ function Home() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button type="submit" className="search-btn">Search</button>
+            {console.log(searchResults)}
+            {searchResults.length > 0
+                ? <button type="button" className="search-btn dismiss-btn" onClick={dismissSearch}>✕</button>
+                
+                : <button type="submit" className="search-btn">{loading ? "..." : "Search"}</button>
+            }
         </form>
 
         {error && <div className="error-message">{error}</div>}

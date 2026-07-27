@@ -42,6 +42,16 @@
   background-color: #f40612;
 }
 
+/* Dismiss search button */
+.dismiss-btn {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+}
+.dismiss-btn:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: transparent;
+}
+
 
 @media (max-width: 639px) {
   .home {
