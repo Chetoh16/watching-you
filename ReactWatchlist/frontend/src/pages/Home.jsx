@@ -125,7 +125,7 @@ function Home() {
         {/* Only show search results section if there are results */}
         {searchResults.length > 0 && (
             <section className="detail-section">
-                <h2>Results</h2>
+                <h2> {searchResults.length} Results </h2>
                 <div className="movies-grid">
                     {searchResults.map(movie => (
                         <div key={movie.id} className="detail-movie-item">
