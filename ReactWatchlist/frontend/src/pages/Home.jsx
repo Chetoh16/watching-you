@@ -115,12 +115,26 @@ function Home() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {console.log(searchResults)}
             {searchResults.length > 0
                 ? <button type="button" className="search-btn dismiss-btn" onClick={dismissSearch}>✕</button>
                 
                 : <button type="submit" className="search-btn">{loading ? "..." : "Search"}</button>
             }
         </form>
+        {/* Only show search results section if there are results */}
+        {searchResults.length > 0 && (
+            <section className="detail-section">
+                <h2>Results</h2>
+                <div className="movies-grid">
+                    {searchResults.map(movie => (
+                        <div key={movie.id} className="detail-movie-item">
+                            <MovieCard movie={movie} />
+                        </div>
+                    ))}
+                </div>
+            </section>
+        )}
 
         {error && <div className="error-message">{error}</div>}
 
