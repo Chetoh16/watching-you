@@ -1,13 +1,13 @@
 # WatchingYou
 A React + Vite application for browsing, favouriting and managing your own movie watchlists, integrating with the TMDB API and Supabase.
 
-![Home-Screen](./ReactWatchlist/frontend/src/assets/home-screen.png)
+![Home-Screen](./frontend/src/assets/home-screen.png)
 
-![Favourites-Screen](./ReactWatchlist/frontend/src/assets/favoruites-screen.png)
+![Favourites-Screen](./frontend/src/assets/favoruites-screen.png)
 
-![Watchlists-Screen](./ReactWatchlist/frontend/src/assets/watchlists-screen.png)
+![Watchlists-Screen](./frontend/src/assets/watchlists-screen.png)
 
-![Watchlist-Page-Screen](./ReactWatchlist/frontend/src/assets/watchlist-page-screen.png)
+![Watchlist-Page-Screen](./frontend/src/assets/watchlist-page-screen.png)
 
 ## Overview
 The application is deployed on Netlify. Go and make your first watchlist now (if you want to)!
