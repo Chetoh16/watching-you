@@ -21,6 +21,12 @@
 
 html, body {
   overflow-x: hidden;
+
+  /* nothing can exceed viewport width. this is mainly a fix for mobile devices */
+  max-width: 100vw;
+
+
+
 }
 
 body {
@@ -83,3 +89,18 @@ button:focus-visible {
   }
 } */
 /* removed the light mode block entirely since this is a dark-only app */
+
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  * {
+
+    /* no element can overflow its container */
+    max-width: 100%;
+  }
+
+  /* make sure the font size is readable on mobile but also prevents iOS auto-zoom on focus*/
+  input, button, select, textarea {
+    font-size: 1em;
+  }
+}
