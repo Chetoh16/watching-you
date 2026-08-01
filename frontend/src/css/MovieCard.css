@@ -125,24 +125,3 @@
   }
 }
 
-@media (max-width: 768px) {
-
-  /* disable hover lift (poster moves up a little on hover for smooth animation) on touch devices */
-  .movie-card:hover {
-    transform: none;    
-  }
-
-  .movie-info h3 {
-    font-size: 0.8rem;
-  }
-
-  .movie-info p {
-    font-size: 0.75rem;
-  }
-
-  .favourite-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 1rem;
-  }
-}
