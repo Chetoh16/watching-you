@@ -79,27 +79,26 @@
   .movies-grid {
     /* Exactly 2 columns on mobile, fills the screen edge to edge */
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    padding: 0.75rem;
-    justify-content: stretch;
+    gap: 0.5rem;
+    padding: 0.5rem;
   }
 
   .search-form {
-    padding: 0 0.75rem;
+    padding: 0 0.5rem;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .search-input {
     /* Prevents iOS zoom */
     font-size: 16px; 
-  }
-}
-
-@media (max-width: 639px) {
-  .home {
-    padding: 1rem 0;
+    min-width: 0;
   }
 
-  .search-form {
-    margin-bottom: 1rem;
+  /* Prevents the search button being cut off */
+  .search-btn {
+    white-space: nowrap;
+    padding: 0.75rem 0.75rem;
+    flex-shrink: 0;
   }
 }
