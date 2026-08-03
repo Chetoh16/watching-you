@@ -81,7 +81,6 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
     padding: 0.5rem;
-    background-color: #81ff0b;
   }
 
   .search-form {
