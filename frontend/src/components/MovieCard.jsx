@@ -2,11 +2,12 @@
 import "../css/MovieCard.css"
 import { useState } from "react"
 import { useMovieContext } from "../contexts/MovieContext"
+import { useNavigate } from "react-router-dom"
 
 
 function MovieCard({movie}){
     
-    const { isFavourite, addToFavourites, removeFromFavourites, watchlists, addMovieToWatchlist } = useMovieContext()
+    const { isFavourite, addToFavourites, removeFromFavourites, watchlists, addMovieToWatchlist, createWatchlist} = useMovieContext()
     const [showWatchlistPicker, setShowWatchlistPicker] = useState(false)
 
     const favourite = isFavourite(movie.id)
@@ -16,6 +17,9 @@ function MovieCard({movie}){
         if (favourite) removeFromFavourites(movie.id)
         else addToFavourites(movie)
     }
+
+    // for navigation to the watchlist detail page when a new watchlist is created and the user is routed to that page to add movies to it
+    const navigate = useNavigate()
 
     const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}?cors`;
     // appending '?cors' bypasses the cached non-CORS image and forces a fresh request
@@ -37,8 +41,23 @@ function MovieCard({movie}){
                 </button>
                 {showWatchlistPicker && (
                     <div className="watchlist-picker" onClick={e => e.stopPropagation()}>
-                        {watchlists.length === 0
-                            ? <p className="picker-empty">No watchlists yet</p>
+                        
+                        {watchlists.length !== 0
+                            ? 
+                            // if there are no watchlists, show a button to create a new watchlist
+                            < button className="picker-item" onClick={async () => {
+                                const newWatchlist = await createWatchlist()
+                                setShowWatchlistPicker(false)
+
+                                if (newWatchlist?.id) {
+                                    navigate(`/watchlists/${newWatchlist.id}`)
+                                }
+                                
+
+
+                            }}>Create watchlist</button>
+                            // <p className="picker-empty">No watchlists yet</p>
+
                             : watchlists.map(w => (
                                 <button
                                     key={w.id}
