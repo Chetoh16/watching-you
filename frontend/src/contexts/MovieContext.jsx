@@ -122,6 +122,7 @@ export const MovieProvider = ({children}) => {
 
         if (!error){
             setWatchlists(prev => [...prev, { ...data, movies: [] }])
+            return data
         }
 
     }
